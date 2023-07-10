@@ -30,16 +30,12 @@ class UserNotificationCenterDelegateHandlers: NSObject, UNUserNotificationCenter
         }
     }
 
-    private var userTapsOnNotificationCount = 0;
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> ()) {
         // Avoid sending the message that launched the app. We will send that one when the user requests for the "Push.instance.notificationTapWhichLaunchedAppFromTerminated" (Dart code)
-        if (userTapsOnNotificationCount > 0) {
 //            let message = PURemoteMessage.fromNotificationContent(content: response.notification.request.content)
             pushFlutterApi.onNotificationTapData(response.notification.request.content.userInfo as! [String: Any]) { _ in  }
-        }
         callOriginalDidReceiveDelegateMethod(center: center, response: response, completionHandler: completionHandler)
-        userTapsOnNotificationCount += 1
     }
 
     // Allow users original UNUserNotificationCenterDelegate they set to respond.
